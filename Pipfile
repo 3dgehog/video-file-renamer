@@ -1,0 +1,19 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+autopep8 = "*"
+flake8 = "*"
+
+[packages]
+requests = "*"
+guessit = "*"
+video-file-renamer = {editable = true,path = "."}
+
+[requires]
+python_version = "3.6"
+
+[scripts]
+_vfr = "python -m video_file_renamer"
