@@ -125,12 +125,12 @@ class TheTVDB(TokenHandler):
         _json = response.json()
 
         if _json['links']['next'] is not None:
-            _json['data'].append(
-                requests.get(
-                    url=url_path,
-                    headers={"Authorization": f"Bearer {self.token}"},
-                    params={"page": _json['links']['next']}
-                ).json()['data']
-            )
+            response = requests.get(
+                url=url_path,
+                headers={"Authorization": f"Bearer {self.token}"},
+                params={"page": _json['links']['next']}
+            ).json()['data']
+            for item in response:
+                _json['data'].append(item)
 
         return _json

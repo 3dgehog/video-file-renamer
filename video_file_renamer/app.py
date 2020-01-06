@@ -8,6 +8,13 @@ from .settings import VALID_EXTENSIONS
 from .utils import get_guessit
 
 
+def match_guessit_thetvdb(guessit, thetvdb):
+    for entry in thetvdb:
+        if guessit['season'] == entry['airedSeason'] \
+                and guessit['episode'] == entry['airedEpisodeNumber']:
+            return entry
+
+
 class App():
     def __init__(self, apikey: str):
         self.thetvdb = TheTVDB(apikey=apikey)
@@ -48,12 +55,8 @@ class App():
 
             for entry in sources:
                 if entry['match']['name'] == serie:
-                    entry['thetvdb'] = next(
-                        x for x in results['data'] if
-                        x['airedSeason'] ==
-                        entry['guessit']['season']
-                        and x['airedEpisodeNumber'] ==
-                        entry['guessit']['episode'])
+                    entry['thetvdb'] = match_guessit_thetvdb(
+                        entry['guessit'], results['data'])
 
         for entry in sources:
             entry['new_name'] = (f"{entry['match']['name']}"
