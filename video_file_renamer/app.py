@@ -1,6 +1,8 @@
 import os
 import difflib
 
+from typing import List
+
 from .thetvdb import TheTVDB
 from .settings import VALID_EXTENSIONS
 from .utils import get_guessit
@@ -16,17 +18,18 @@ class App():
         if not os.path.isdir(path):
             raise NotADirectoryError
 
-        sources = []
-        for entry in os.scandir(path):
-            if entry.name.rpartition('.')[-1] not in VALID_EXTENSIONS:
+        sources: List[dict] = []
+        for direntry in os.scandir(path):
+            if direntry.name.rpartition('.')[-1] not in VALID_EXTENSIONS:
                 continue
-            sources.insert(0, {"name": entry.name, "path": entry.path})
+            data: dict = {"name": direntry.name, "path": direntry.path}
+            sources.insert(0, data)
 
         for entry in sources:
             guessit_match = get_guessit(entry['name'])
             entry["guessit"] = guessit_match
 
-        series_names = []
+        series_names: List[str] = []
         for entry in sources:
             entry['match'] = {}
             diff_match = difflib.get_close_matches(
